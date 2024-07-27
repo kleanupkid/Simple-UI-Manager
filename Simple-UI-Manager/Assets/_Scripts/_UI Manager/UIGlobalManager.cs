@@ -19,6 +19,7 @@ public class UIGlobalManager : MonoBehaviour
     [Tooltip("Action to be called when you need to update a text value")]
     public static Action<string,float> UpdateTextLayer;
     public static Action<string,float> DisplayPromptLayer;
+    public static Action<string, float> DisplayPromptLayerWithTweening;
     public static Action<string, bool> ToggleMenu;
     public static Action<string,UnityAction> ListenerToButton;
     public static Action<string, float> UpdateSliderValue;
@@ -49,6 +50,7 @@ public class UIGlobalManager : MonoBehaviour
     {
         UpdateTextLayer += UpdateText;
         DisplayPromptLayer += DisplayPrompts;
+        DisplayPromptLayerWithTweening += DisplayPromptsWithTween;
         ToggleMenu += OpenMenu;
         ListenerToButton += AddListenerToButton;
         UpdateSliderValue += UpdateSlider;
@@ -58,6 +60,7 @@ public class UIGlobalManager : MonoBehaviour
     {
         UpdateTextLayer -= UpdateText;
         DisplayPromptLayer -= DisplayPrompts;
+        DisplayPromptLayerWithTweening -= DisplayPromptsWithTween;
         ToggleMenu -= OpenMenu;
         ListenerToButton -= AddListenerToButton;
         UpdateSliderValue -= UpdateSlider;
@@ -88,11 +91,23 @@ public class UIGlobalManager : MonoBehaviour
             return;
         }
         
-        // If you want to move the layer to a particular position, toggle this
-        //StartCoroutine(CShowPromptForSeconds(promptLayer.uiLayer,promptLayer.rectTransform,promptLayer.startingPosition,timeToStay));
-        
         // If you want to simply display the layer in the given position, toggle this
         StartCoroutine(CDisplayForSeconds(promptLayer.uiLayer, timeToStay));
+    }
+    
+    // Function to be called when you need to display a prompt and move it to a particular position
+    
+    private void DisplayPromptsWithTween(string promptName,float timeToStay)
+    {
+        UIProperties promptLayer = Array.Find(uIProperties, promptLayer => promptLayer.componentName == promptName);
+
+        if (promptLayer == null)
+        {
+            return;
+        }
+        
+        // If you want to move the layer to a particular position, toggle this
+        StartCoroutine(CShowPromptForSeconds(promptLayer.uiLayer,promptLayer.rectTransform,promptLayer.startingPosition,timeToStay));
     }
 
     // Function to be called when you need to display a menu
